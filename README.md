@@ -1,5 +1,8 @@
 For any issues contact @arun.etech on slack
 
+##### PATH - public_html/nodejs/etech_testing_api
+##### Runs in PM2 on 144 server
+
 ## Api's for poll management system
 
 
