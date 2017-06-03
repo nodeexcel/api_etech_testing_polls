@@ -1,8 +1,8 @@
 For any issues contact @arun.etech on slack
 
-##### PATH - 144 - /public_html/nodejs/api_etech_testing/polls
-##### Start APP - node app.js
-##### Start With PM2 : pm2 start app.js --name api_etech_testing_polls
+#### PATH - 144 - /public_html/inhouse_applications/api_etech_testing_polls
+#### Start APP - node app.js
+#### Start With PM2 : pm2 start app.js --name api_etech_testing_polls
 
 ## Api's for poll management system
 
