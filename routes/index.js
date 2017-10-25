@@ -1,5 +1,8 @@
 var express = require('express');
 var router = express.Router();
+var jwt = require('jsonwebtoken');
+var auth = require('../middleware/auth');
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -80,9 +83,12 @@ router.all('/login', function(req, res, next) {
             next(err);
         } else {
             if (user) {
+                var token = jwt.sign({ user_id: user._id }, "jwt_tok", {
+                    expiresIn: 3600000
+                });
                 res.json({
                     error: 0,
-                    data: user
+                    token: token
                 });
             } else {
                 res.json({
@@ -119,10 +125,11 @@ router.all('/add_poll', function(req, res, next) {
     var title = req.query.title;
     var options = req.query.options;
     var date = req.query.date;
+    var ids = []
     var final_options = [];
 
     split_options = options.split('____');
-
+    date = new Date();
     for (var k in split_options) {
         kk = split_options[k];
         final_options.push({
@@ -134,7 +141,8 @@ router.all('/add_poll', function(req, res, next) {
     var pollObj = {
         title: title,
         options: final_options,
-        date: date
+        date: date,
+        ids: ids
     };
 
 
@@ -206,48 +214,90 @@ router.all('/list_poll', function(req, res, next) {
 router.all('/do_vote', function(req, res, next) {
     var id = req.query.id;
     var option_text = req.query.option_text;
-    table_polls.findOne({
-        '_id': id
-    }).exec(function(err, poll) {
+    var voted_users = [];
+    auth.validateAccess(req, function(err, access_token_data) {
         if (err) {
-            next(err);
+            res.status(402).json({ error: 1 });
         } else {
-            if (poll) {
-                poll_options = poll.get('options');
-                var new_options = [];
-                for (var k in poll_options) {
-                    opt = poll_options[k];
-                    if (opt.option == option_text) {
-                        opt.vote = opt.vote + 1;
-                    }
-                    new_options.push(opt);
-                }
-                table_polls.update({
-                    _id: id
-                }, {
-                    $set: {
-                        options: new_options
-                    }
-                }, function(err) {
-                    if (err) {
-                        res.json({
-                            error: 1
+            var users_id = access_token_data.user_id;
+            table_polls.findOne({
+                '_id': id
+            }).exec(function(err, poll) {
+                if (err) {
+                    next(err);
+                } else {
+                    if (poll) {
+                        poll_options = poll.get('options');
+                        var new_options = [];
+                        voted_users = poll.get('ids');
+                        flag = 0;
+                        for (var k in voted_users) {
+                            if (voted_users[k].id == users_id) {
+                                flag = 1;
+                                if (option_text == voted_users[k].opt) {
+                                    for (var k in poll_options) {
+                                        new_options.push(poll_options[k]);
+                                    }
+                                } else {
+                                    var old_vote = voted_users[k].opt;
+                                    for (var a in poll_options) {
+                                        opt = poll_options[a];
+                                        if (opt.option == old_vote) {
+                                            opt.vote = opt.vote - 1;
+                                        } else if (opt.option == option_text) {
+                                            opt.vote = opt.vote + 1;
+                                            voted_users[k].opt = option_text;
+                                        }
+                                        new_options.push(opt);
+                                    }
+                                }
+                            } else {
+                                flag = 0;
+                            }
+                        }
+                        if (flag == 0) {
+                            for (var c in poll_options) {
+                                opt = poll_options[c];
+                                if (opt.option == option_text) {
+                                    opt.vote = opt.vote + 1;
+                                }
+                                new_options.push(opt);
+                            }
+                            voted_users.push({
+                                id: users_id,
+                                opt: option_text
+                            })
+                        }
+
+                        table_polls.update({
+                            _id: id
+                        }, {
+                            $set: {
+                                options: new_options,
+                                ids: voted_users
+                            }
+                        }, function(err) {
+                            if (err) {
+                                res.json({
+                                    error: 1
+                                });
+                            } else {
+                                res.json({
+                                    error: 0
+                                });
+                            }
                         });
+
                     } else {
                         res.json({
-                            error: 0
+                            error: 1,
+                            data: 'poll not found'
                         });
                     }
-                });
-
-            } else {
-                res.json({
-                    error: 1,
-                    data: 'poll not found'
-                });
-            }
+                }
+            })
         }
-    });
+    })
 });
 
 
@@ -446,7 +496,7 @@ router.all('/update_poll_option', function(req, res, next) {
                     $set: {
                         options: new_options
                     }
-                }, function(err) {
+                }, function(err, data) {
                     if (err) {
                         res.json({
                             error: 1
