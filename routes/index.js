@@ -250,6 +250,7 @@ router.all('/do_vote', function(req, res, next) {
                                         new_options.push(opt);
                                     }
                                 }
+                                if (flag == 1) { break; }
                             } else {
                                 flag = 0;
                             }
