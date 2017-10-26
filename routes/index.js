@@ -516,18 +516,4 @@ router.all('/update_poll_option', function(req, res, next) {
     });
 });
 
-router.all('/summary', function(req, res, next) {
-    task_id = req.query.task_id;
-    table_polls.find({ '_id': task_id }).exec(function(err, poll) {
-        if (err) {
-            next(err);
-        } else {
-            user_details = poll.ids;
-            console.log(user_details)
-            res.json(poll)
-        }
-    })
-
-})
-
 module.exports = router;
