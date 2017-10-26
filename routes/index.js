@@ -127,9 +127,8 @@ router.all('/add_poll', function(req, res, next) {
     var date = req.query.date;
     var ids = []
     var final_options = [];
-
     split_options = options.split('____');
-    date = new Date();
+    date = new Date(date);
     for (var k in split_options) {
         kk = split_options[k];
         final_options.push({
@@ -516,4 +515,5 @@ router.all('/update_poll_option', function(req, res, next) {
         }
     });
 });
+
 module.exports = router;
