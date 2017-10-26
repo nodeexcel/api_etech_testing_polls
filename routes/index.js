@@ -238,7 +238,6 @@ router.all('/do_vote', function(req, res, next) {
                                         new_options.push(poll_options[k]);
                                     }
                                 } else {
-                                    console.log("helloo")
                                     var old_vote = voted_users[k].opt;
                                     for (var a in poll_options) {
                                         opt = poll_options[a];
