@@ -1,7 +1,11 @@
 For any issues contact @arun.etech on slack
 
 #### PATH - 144 - /public_html/inhouse_applications/api_etech_testing_polls
-#### Start APP - node app.js
+#### Start APP - 
+```
+npm install 
+npm start
+```
 #### Start With PM2 : pm2 start app.js --name api_etech_testing_polls
 
 ## Api's for poll management system
@@ -15,7 +19,7 @@ User Already exists
 {"error":1,"message":"Account Already Exists!"}
 
 User created 
-{"error":0,"data":{"username":"admian","password":"admin","role":"admin","id":"576d03da647a7ae24332fe48"}}
+{"error":0,"data":{"username":"admin","password":"admin","role":"admin","id":"576d03da647a7ae24332fe48"}}
 
 ##### 2. Login
 http://144.76.34.244:3333/login?username=admin&password=admin
@@ -47,6 +51,8 @@ http://144.76.34.244:3333/list_poll
 
 ##### 7. Vote Api
 http://144.76.34.244:3333/do_vote?id=577212fdd1bba33c17b5b64e&option_text=nodejs
+##### set headers for above api: 
+access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNWEwMTgyYzU5NTI3ZmUwMDEyMzcwN2IyIiwiaWF0IjoxNTEwMDQ4NDY4LCJleHAiOjE1MTM2NDg0Njh9.DG93Hq-Fde9kNZbgnr34l2dZyeEYyJ0OfD_9yZK1JCQ
 
 ##### 8. Add New Option to a poll
 http://144.76.34.244:3333/add_new_option?id=577212fdd1bba33c17b5b64e&option_text=arunkumar
