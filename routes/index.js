@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 
 var mongoose = require('mongoose');
-var conn = mongoose.createConnection('mongodb://localhost/etech_testing_api');
+var conn = mongoose.connect('mongodb://ashutosh_m:java123@ds251245.mlab.com:51245/etech_testing_polls');
 var users = mongoose.Schema({}, {
     strict: false,
     collection: 'users'
