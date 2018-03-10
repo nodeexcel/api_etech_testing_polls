@@ -47,7 +47,7 @@ Response :
 https://secure-refuge-14993.herokuapp.com/list_polls
 
 ##### 6. List a Poll
-https://secure-refuge-14993.herokuapp.com/list_poll
+https://secure-refuge-14993.herokuapp.com/list_poll?id=5a740779fbe2df0012c0b10e
 
 ##### 7. Vote Api
 https://secure-refuge-14993.herokuapp.com/do_vote?id=577212fdd1bba33c17b5b64e&option_text=nodejs
