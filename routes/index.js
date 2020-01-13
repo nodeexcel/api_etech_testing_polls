@@ -83,7 +83,9 @@ router.all('/login', function(req, res, next) {
             next(err);
         } else {
             if (user) {
-                var token = jwt.sign({ user_id: user._id }, "jwt_tok", {
+                user = JSON.parse(JSON.stringify(user))
+                delete user.password
+                var token = jwt.sign(user, "jwt_tok", {
                     expiresIn: 3600000
                 });
                 res.json({
