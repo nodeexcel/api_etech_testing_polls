@@ -1,3 +1,44 @@
 /node_modules/*
 /node_modules
 /nbproject/private/
+
+
+    var username = req.query.username;
+    var password = req.query.password;
+    var role = req.query.role;
+
+    var userObj = {
+        username: username,
+        password: password,
+        role: role
+    };
+
+    table_users.findOne({
+        username: username
+    }).exec(function(err, user) {
+        if (err) {
+            next(err);
+        } else {
+            if (user) {
+                res.json({
+                    error: 1,
+                    message: 'Account Already Exists!'
+                });
+            } else {
+                var model = new table_users(userObj);
+                model.save(function(err) {
+                    if (err) {
+                        next(err);
+                    } else {
+                        var id = model._id;
+                        userObj.id = id;
+                        res.json({
+                            error: 0,
+                            data: userObj
+                        });
+                    }
+                });
+            }
+        }
+    });
+});
