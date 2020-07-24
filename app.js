@@ -8,11 +8,8 @@ var mongoose = require('mongoose');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+require("./dbConnection/connection")
 var cors = require('cors');
-
-
-
 
 var app = express();
 
@@ -70,5 +67,5 @@ module.exports = app;
 
 
 app.listen(3031, function() {
-    console.log('app listening on port 3031!');
+    console.log('app listening on port 3333!');
 });

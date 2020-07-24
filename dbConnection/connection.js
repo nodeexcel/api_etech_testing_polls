@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-var mongoose = require("mongoose");
- mongoose.connect(
+mongoose.connect(
   "mongodb://ashutosh_m:java123@ds251245.mlab.com:51245/etech_testing_polls",
   {
     useNewUrlParser: true,
