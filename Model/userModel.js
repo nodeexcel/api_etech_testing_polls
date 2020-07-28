@@ -1,34 +1,58 @@
 var mongoose = require("mongoose");
 const utils = require("../commonFunction/utils");
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 
 var users = mongoose.Schema(
-  {},
   {
-    strict: false,
+    username: {
+      type: String,
+    },
+    password: {
+      type: String,
+    },
+    role: {
+      type: String,
+    },
+  },
+  {
+    timestamps: true,
     collection: "users",
   }
 );
-const userModel = mongooose.model("users", users);
+var userModel = mongoose.model("users", users);
 
-userModel["addUser"] = async (body, res) => {
+(userModel["AddUser"] = async (body, res) => {
   try {
-    const fetch = userModel.findOne({ username: body.username });
+    const fetch = await userModel.findOne({ username: body.username });
     if (fetch) {
-      res
-        .status(utils.ErrorCode.AlreadyExist)
-        .send(utils.Error_Message.NameExist);
-    } else {
-        hash = await bcrypt.hash(req.body.passowrd,10)
-      var userObj = {
-        username: req.body.username,
-        password: hash,
-        role: req.body.role,
-      };
-      var User = await new userModel(userObj).save();
-      return User;
+      if (fetch.username == body.username) {
+        return res
+          .status(utils.Error_Code.AlreadyExist)
+          .send(utils.Error_Message.NameExist);
+      }
     }
-  } catch (err) {}
-};
-
-module.exports = userModel;
+  } catch (err) {
+    throw err;
+  }
+}),
+  (userModel["Login"] = async (body, res) => {
+    try {
+      var fetch = await userModel.findOne({ username: body.username });
+      if (fetch) {
+        var hash = fetch.password;
+        var pass = await bcrypt.compare(body.password, hash);
+        if (pass == false) {
+          res
+            .status(utils.Error_Code.NotMatch)
+            .send(utils.Error_Message.InvalidLogin);
+        }
+      } else {
+        res
+          .status(utils.Error_Code.NotFound)
+          .send(utils.Error_Message.NotExist);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }),
+  (module.exports = userModel);

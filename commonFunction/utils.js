@@ -18,6 +18,7 @@ module.exports.Error_Code = Object.freeze({
     NotExist: "User Doesnot Exist.",
     Not_Found: "Token Not Found.",
     NoData: "No Data Found.",
+    IdExist: "Id Already Exist."
   });
   module.exports.Success_Message = Object.freeze({
     SignUp_Successfully: "Thank you, You are successfully SignUp.",
