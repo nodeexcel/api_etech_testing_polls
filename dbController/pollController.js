@@ -5,9 +5,11 @@ var auth = require("../middleware/auth");
 
 module.exports = {
   addPoll: async (req, res) => {
-    const saved = await polls.Addpoll(req.body, res);
     try {
-      res.status(utils.Success_Code.Success).json({ saved });
+      const saved = await polls.Addpoll(req.body, res);
+      res.status(utils.Success_Code.Success).json({
+        saved
+      });
     } catch (error) {
       res
         .status(utils.Error_Code.Internal_Error)
@@ -16,8 +18,8 @@ module.exports = {
   },
 
   listPolls: async (req, res) => {
-    const poll = await polls.find({});
     try {
+      const poll = await polls.find({});
       res.json({
         data: poll,
       });
@@ -28,12 +30,14 @@ module.exports = {
     }
   },
   listPoll: async (req, res) => {
-    const result = await polls.ListPoll(req.query, res);
     try {
+      const result = await polls.ListPoll(req.query, res);
       if (result == null) {
         res.status(utils.Error_Code.NotFound).send(utils.Error_Message.NoData);
       } else {
-        res.status(utils.Success_Code.Success).json({ result });
+        res.status(utils.Success_Code.Success).json({
+          result
+        });
       }
     } catch (error) {
       res
@@ -42,29 +46,37 @@ module.exports = {
     }
   },
   doVote: async (req, res) => {
-    var vote = await polls.DoVote(req.body, res);
-    console.log(vote);
     try {
+      const vote = await polls.DoVote(req.body);
       if (vote == 0) {
-        res.status(utils.Success_Code.Success).json({ error: 0 });
+        res.status(utils.Success_Code.Success).json({
+          error: 0
+        });
       } else {
-        res.status(utils.Success_Code.Success).json({ error: 1 });
+        res.status(utils.Success_Code.Success).json({
+          error: 1
+        });
       }
     } catch (error) {
-      res
-        .status(utils.Error_Code.Internal_Error)
-        .send(utils.Error_Message.InternalError);
-      F;
+      res.status(error.status).send(error.message);
     }
   },
   addNewOpt: async (req, res) => {
-    await polls.newOpt(req.body, res);
     try {
+      await polls.newOpt(req.body);
       res.status(utils.Success_Code.Success).send(utils.Success_Message.OptAdd);
     } catch (error) {
-      res
-        .status(utils.Error_Code.Internal_Error)
-        .send(utils.Error_Message.InternalError);
+      res.status(error.status).send({
+        result: error.message
+      });
+    }
+  },
+  delOpt: async (req, res) => {
+    try {
+      await polls.delOption(req.body);
+      res.status(utils.Success_Code.Success).send(utils.Success_Message.Deleted);
+    } catch (error) {
+      res.status(error.status).send(error.message);
     }
   },
 };

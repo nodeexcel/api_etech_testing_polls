@@ -8,7 +8,7 @@ const pollController = require("../dbController/pollController");
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", {
-    title: "Express"
+    title: "Express",
   });
 });
 
@@ -28,54 +28,7 @@ router.post("/do_vote", auth.validateAccess, pollController.doVote);
 
 router.post("/add_new_option", pollController.addNewOpt);
 
-router.all("/delete_poll_option", function (req, res, next) {
-  var id = req.query.id;
-  var option_text = req.query.option_text;
-  table_polls
-    .findOne({
-      _id: id,
-    })
-    .exec(function (err, poll) {
-      if (err) {
-        next(err);
-      } else {
-        if (poll) {
-          poll_options = poll.get("options");
-          var new_options = [];
-          for (var k in poll_options) {
-            opt = poll_options[k];
-            if (opt.option == option_text) {} else {
-              new_options.push(opt);
-            }
-          }
-          table_polls.update({
-              _id: id,
-            }, {
-              $set: {
-                options: new_options,
-              },
-            },
-            function (err) {
-              if (err) {
-                res.json({
-                  error: 1,
-                });
-              } else {
-                res.json({
-                  error: 0,
-                });
-              }
-            }
-          );
-        } else {
-          res.json({
-            error: 1,
-            data: "poll not found",
-          });
-        }
-      }
-    });
-});
+router.post("/delete_poll_option", pollController.delOpt);
 
 router.all("/update_poll_title", function (req, res, next) {
   var id = req.query.id;
@@ -89,9 +42,11 @@ router.all("/update_poll_title", function (req, res, next) {
         next(err);
       } else {
         if (poll) {
-          table_polls.update({
+          table_polls.update(
+            {
               _id: id,
-            }, {
+            },
+            {
               $set: {
                 title: new_title,
               },
@@ -129,7 +84,8 @@ router.all("/delete_poll", function (req, res, next) {
         next(err);
       } else {
         if (poll) {
-          table_polls.remove({
+          table_polls.remove(
+            {
               _id: id,
             },
             function (err) {
@@ -178,9 +134,11 @@ router.all("/update_poll_option", function (req, res, next) {
               new_options.push(opt);
             }
           }
-          table_polls.update({
+          table_polls.update(
+            {
               _id: id,
-            }, {
+            },
+            {
               $set: {
                 options: new_options,
               },
