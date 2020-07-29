@@ -1,4 +1,4 @@
-`--unhandled-rejections=strict`
+`--unhandled-rejections=strict`;
 var polls = require("../Model/pollModel");
 const utils = require("../commonFunction/utils");
 var auth = require("../middleware/auth");
@@ -43,7 +43,7 @@ module.exports = {
   },
   doVote: async (req, res) => {
     var vote = await polls.DoVote(req.body, res);
-    console.log(vote)
+    console.log(vote);
     try {
       if (vote == 0) {
         res.status(utils.Success_Code.Success).json({ error: 0 });
@@ -54,7 +54,17 @@ module.exports = {
       res
         .status(utils.Error_Code.Internal_Error)
         .send(utils.Error_Message.InternalError);
-      
+      F;
+    }
+  },
+  addNewOpt: async (req, res) => {
+    await polls.newOpt(req.body, res);
+    try {
+      res.status(utils.Success_Code.Success).send(utils.Success_Message.OptAdd);
+    } catch (error) {
+      res
+        .status(utils.Error_Code.Internal_Error)
+        .send(utils.Error_Message.InternalError);
     }
   },
 };

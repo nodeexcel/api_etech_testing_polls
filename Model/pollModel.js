@@ -1,21 +1,24 @@
 var mongoose = require("mongoose");
 var auth = require("../middleware/auth");
-var utils = require("../commonFunction/utils")
+var utils = require("../commonFunction/utils");
 
-var polls = mongoose.Schema({
-  title: {
-    type: String,
+var polls = mongoose.Schema(
+  {
+    title: {
+      type: String,
+    },
+    options: {
+      type: Array,
+    },
+    date: {
+      type: String,
+    },
+    ids: [],
   },
-  options: {
-    type: Array,
-  },
-  date: {
-    type: String,
-  },
-  ids: [],
-}, {
-  collection: "polls",
-});
+  {
+    collection: "polls",
+  }
+);
 const pollModel = mongoose.model("polls", polls);
 
 pollModel.Addpoll = async (body) => {
@@ -49,13 +52,13 @@ pollModel.Addpoll = async (body) => {
 pollModel.ListPoll = async (query, res) => {
   try {
     var id = query.id;
-    const Fetch = await pollModel.findOne({
-      _id: id
+    const fetch = await pollModel.findOne({
+      _id: id,
     });
-    if (!Fetch) {
+    if (!fetch) {
       return null;
     } else {
-      return Fetch;
+      return fetch;
     }
   } catch (err) {
     throw err;
@@ -74,15 +77,15 @@ pollModel.DoVote = async (body, res) => {
       poll_options = poll.get("options");
       var new_options = [];
       voted_users = poll.get("ids");
-     await voted_users.forEach(element => {
-       if(String(element.id)==String(users_id)){
-         return res.status(utils.Error_Code.AlreadyExist).send(utils.Error_Message.IdExist)
-       }
-       
-     });
- 
+      await voted_users.forEach((element) => {
+        if (String(element.id) == String(users_id)) {
+          return res
+            .status(utils.Error_Code.AlreadyExist)
+            .send(utils.Error_Message.IdExist);
+        }
+      });
       flag = 0;
-      for (var k in voted_users) {        
+      for (var k in voted_users) {
         if (voted_users[k].id == users_id) {
           flag = 1;
           if (option_text == voted_users[k].opt) {
@@ -117,32 +120,68 @@ pollModel.DoVote = async (body, res) => {
           }
           new_options.push(opt);
         }
-
         voted_users.push({
           id: users_id,
           opt: option_text,
         });
-      
-      await pollModel.update({
-        _id: id,
-      }, {
-        $set: {
-          options: new_options,
-          ids: voted_users,
-        },
+        await pollModel.update(
+          { _id: id },
+          { $set: { options: new_options, ids: voted_users } }
+        );
+        return 0;
+      }
+    } else {
+      res.json({
+        data: "poll not found",
       });
-      return 0;
-    }  
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+
+pollModel.newOpt = async (body, res) => {
+  try {
+    const option_text = body.option_text;
+    const poll = await pollModel.findOne({ _id: body.id });
+    if (poll) {
+      const opt = await pollModel.findOne({
+        $and: [{ _id: body.id }, { "options.option": body.option_text }],
+      });
+      console.log(opt);
+      if (opt == null) {
+        poll_options = poll.get("options");
+        var new_options = poll_options;
+        new_options.push({
+          vote: 0 * 1,
+          option: option_text,
+        });
+        const data = await pollModel.update(
+          {
+            _id: body.id,
+          },
+          {
+            $set: {
+              options: new_options,
+            },
+          }
+        );
+        return data;
+      } else {
+        return res.json({
+          data: "option already exist",
+        });
+      }
     } else {
       res.json({
         error: 1,
         data: "poll not found",
       });
     }
-
   } catch (err) {
-    throw err;
+    res.json({
+      error: err,
+    });
   }
 };
-
 module.exports = pollModel;

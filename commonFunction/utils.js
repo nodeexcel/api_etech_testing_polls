@@ -25,5 +25,6 @@ module.exports.Error_Code = Object.freeze({
     Login: "Login Successfully.",
     DataFound: "Data Found Successfully.",
     Deleted: "User Delete Successfully.",
+    OptAdd: "Option Added Successfully"
   });
   
