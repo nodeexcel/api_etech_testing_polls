@@ -26,9 +26,9 @@ var userModel = mongoose.model("users", users);
     const fetch = await userModel.findOne({ username: body.username });
     if (fetch) {
       if (fetch.username == body.username) {
-        return res
-          .status(utils.Error_Code.AlreadyExist)
-          .send(utils.Error_Message.NameExist);
+        let err = new Error("UserName Already Exist.")
+        err.status= utils.Error_Code.AlreadyExist
+        throw err;
       }
     }
   } catch (err) {
@@ -42,14 +42,14 @@ var userModel = mongoose.model("users", users);
         var hash = fetch.password;
         var pass = await bcrypt.compare(body.password, hash);
         if (pass == false) {
-          res
-            .status(utils.Error_Code.NotMatch)
-            .send(utils.Error_Message.InvalidLogin);
+          let err = new Error("UserName Already Exist.")
+        err.status= utils.Error_Code.NotMatch
+        throw err;
         }
       } else {
-        res
-          .status(utils.Error_Code.NotFound)
-          .send(utils.Error_Message.NotExist);
+        let err = new Error("User doesnot Exist.")
+        err.status= utils.Error_Code.NotFound
+        throw err;
       }
     } catch (error) {
       throw error;

@@ -6,7 +6,7 @@ var auth = require("../middleware/auth");
 module.exports = {
   addPoll: async (req, res) => {
     try {
-      const saved = await polls.Addpoll(req.body, res);
+      const saved = await polls.Addpoll(req.body);
       res.status(utils.Success_Code.Success).json({
         saved,
       });
@@ -31,7 +31,7 @@ module.exports = {
   },
   listPoll: async (req, res) => {
     try {
-      const result = await polls.ListPoll(req.query, res);
+      const result = await polls.ListPoll(req.query);
       if (result == null) {
         res.status(utils.Error_Code.NotFound).send(utils.Error_Message.NoData);
       } else {
