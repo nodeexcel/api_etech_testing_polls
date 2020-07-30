@@ -5,14 +5,11 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+require("./dbConnection/connection")
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
 var cors = require('cors');
-
-
-
 
 var app = express();
 
@@ -26,12 +23,12 @@ app.set('view engine', 'jade');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
-app.use('/users', users);
+app.use('/users', routes);
+app.use('/', users);
 
 
 // catch 404 and forward to error handler
@@ -70,5 +67,5 @@ module.exports = app;
 
 
 app.listen(3031, function() {
-    console.log('app listening on port 3031!');
+    console.log('app listening on port 3300!');
 });
