@@ -49,7 +49,7 @@ pollModel.Addpoll = async (body) => {
     throw error;
   }
 };
-pollModel.ListPoll = async (query, res) => {
+pollModel.ListPoll = async (query) => {
   try {
     var id = query.id;
     const fetch = await pollModel.findOne({
@@ -220,6 +220,93 @@ pollModel.delOption = async (body) => {
         }
       );
       return result;
+    } else {
+      let err = new Error("Poll Not Found");
+      err.status = utils.Error_Code.NotFound;
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+pollModel.updateTitle = async (body) => {
+  try {
+    var new_title = body.title;
+    const poll = await pollModel.findOne({
+      _id: body.id,
+    });
+    if (poll != null) {
+      const update = await pollModel.update(
+        {
+          _id: body.id,
+        },
+
+        {
+          $set: {
+            title: new_title,
+          },
+        }
+      );
+      return update;
+    } else {
+      let err = new Error("Poll Not Found");
+      err.status = utils.Error_Code.NotFound;
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+pollModel.delPoll = async (query) => {
+  try {
+    const poll = await pollModel.findOne({
+      _id: query.id,
+    });
+    if (poll) {
+      const trash = await pollModel.remove({
+        _id: query.id,
+      });
+      return trash;
+    } else {
+      let err = new Error("Poll Not Found");
+      err.status = utils.Error_Code.NotFound;
+      throw err;
+    }
+  } catch (err) {
+    throw err;
+  }
+};
+pollModel.updateOption = async (body) => {
+  try {
+    var old_option = body.old_option;
+    var option_text = body.option_text;
+    const poll = await pollModel.findOne({
+      $and: [
+        {
+          _id: body.id,
+        },
+        {
+          "options.option": old_option,
+        },
+      ],
+    });
+    if (poll != null) {
+      poll_options = poll.get("options");
+      var new_options = [];
+      for (var k in poll_options) {
+        opt = poll_options[k];
+        if (opt.option == old_option) {
+          opt.option = option_text;
+          new_options.push(opt);
+        } else {
+          new_options.push(opt);
+        }
+      }
+      const data = pollModel.update(
+        { _id: body.id },
+        { $set: { options: new_options } }
+      );
+      return data;
     } else {
       let err = new Error("Poll Not Found");
       err.status = utils.Error_Code.NotFound;

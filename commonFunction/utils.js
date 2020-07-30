@@ -26,4 +26,5 @@ module.exports.Success_Message = Object.freeze({
   DataFound: "Data Found Successfully.",
   Deleted: " Delete Successfully.",
   OptAdd: "Option Added Successfully",
+  Update: "Updated Successfully",
 });

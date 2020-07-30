@@ -8,7 +8,7 @@ module.exports = {
     try {
       const saved = await polls.Addpoll(req.body, res);
       res.status(utils.Success_Code.Success).json({
-        saved
+        saved,
       });
     } catch (error) {
       res
@@ -36,7 +36,7 @@ module.exports = {
         res.status(utils.Error_Code.NotFound).send(utils.Error_Message.NoData);
       } else {
         res.status(utils.Success_Code.Success).json({
-          result
+          result,
         });
       }
     } catch (error) {
@@ -50,11 +50,11 @@ module.exports = {
       const vote = await polls.DoVote(req.body);
       if (vote == 0) {
         res.status(utils.Success_Code.Success).json({
-          error: 0
+          error: 0,
         });
       } else {
         res.status(utils.Success_Code.Success).json({
-          error: 1
+          error: 1,
         });
       }
     } catch (error) {
@@ -67,14 +67,42 @@ module.exports = {
       res.status(utils.Success_Code.Success).send(utils.Success_Message.OptAdd);
     } catch (error) {
       res.status(error.status).send({
-        result: error.message
+        result: error.message,
       });
     }
   },
   delOpt: async (req, res) => {
     try {
       await polls.delOption(req.body);
-      res.status(utils.Success_Code.Success).send(utils.Success_Message.Deleted);
+      res
+        .status(utils.Success_Code.Success)
+        .send(utils.Success_Message.Deleted);
+    } catch (error) {
+      res.status(error.status).send(error.message);
+    }
+  },
+  updatePollTitle: async (req, res) => {
+    try {
+      await polls.updateTitle(req.body);
+      res.status(utils.Success_Code.Success).send(utils.Success_Message.Update);
+    } catch (error) {
+      res.status(error.status).send(error.message);
+    }
+  },
+  deletePoll: async (req, res) => {
+    try {
+      await polls.delPoll(req.query);
+      res
+        .status(utils.Success_Code.Success)
+        .send(utils.Success_Message.Deleted);
+    } catch (error) {
+      res.status(error.status).send(error.message);
+    }
+  },
+  updatePollOption: async (req, res) => {
+    try {
+      await polls.updateOption(req.body);
+      res.status(utils.Success_Code.Success).send(utils.Success_Message.Update);
     } catch (error) {
       res.status(error.status).send(error.message);
     }
