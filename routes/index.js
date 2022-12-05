@@ -10,19 +10,8 @@ router.get('/', function(req, res, next) {
 });
 
 
-var mongoose = require('mongoose');
-var conn = mongoose.connect('mongodb+srv://rohit_excel:mqQ8DIF40cst12Gg@cluster0.ugmkv.mongodb.net/etech_testing_api?retryWrites=true&w=majority');
-var users = mongoose.Schema({}, {
-    strict: false,
-    collection: 'users'
-});
-var table_users = conn.model('users', users);
-
-var polls = mongoose.Schema({}, {
-    strict: false,
-    collection: 'polls'
-});
-var table_polls = conn.model('polls', polls);
+var table_users = require('../models/user');
+var table_polls = require('../models/toll');
 
 
 router.all('/add_user', function(req, res, next) {

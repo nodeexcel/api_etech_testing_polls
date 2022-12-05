@@ -4,8 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
+const dbconURL = "mongodb+srv://rohit_excel:mqQ8DIF40cst12Gg@cluster0.ugmkv.mongodb.net/etech_testing_api?retryWrites=true&w=majority"
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
@@ -65,10 +65,28 @@ app.use(function(err, req, res, next) {
     });
 });
 
+mongoose
+	.connect(dbconURL, { useNewUrlParser: true })
+	.then(() => {
 
+		app.listen(3031, function() {
+            console.log('app listening on port 3031!');
+        });
+	})
 module.exports = app;
 
 
-app.listen(3031, function() {
-    console.log('app listening on port 3031!');
-});
+// mongoose.connect()
+
+// mongoose
+// 	.connect(,{ useNewUrlParser: true })
+// 	.then(() => {
+// 		app.listen(3031, function() {
+//             console.log('app listening on port 3031!');
+//         });
+// 	}).catch(e=>console.log)
+
+
+    //mongodb+srv://rohit_excel:mqQ8DIF40cst12Gg@cluster0.ugmkv.mongodb.net/etech_testing_api
+
+    //mongodb+srv://rohit_excel:mqQ8DIF40cst12Gg@cluster0.ugmkv.mongodb.net/etech_testing_api?retryWrites=true&w=majority
