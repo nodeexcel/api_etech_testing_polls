@@ -69,7 +69,7 @@ mongoose
 	.connect(dbconURL, { useNewUrlParser: true })
 	.then(() => {
 
-		app.listen(3031, function() {
+		app.listen(process.env.PORT || 3031, function() {
             console.log('app listening on port 3031! new');
         });
 	})
