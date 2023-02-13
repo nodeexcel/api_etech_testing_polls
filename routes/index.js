@@ -9,19 +9,21 @@ router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
 //mongodb://ashutosh_m:java123@ds251245.mlab.com:51245/etech_testing_polls
+
 var mongoose = require('mongoose');
-var conn = mongoose.connect('mongodb://localhost:27017/etech_testing_polls');
+
+
 var users = mongoose.Schema({}, {
     strict: false,
     collection: 'users'
 });
-var table_users = conn.model('users', users);
+var table_users = mongoose.model('users', users);
 
 var polls = mongoose.Schema({}, {
     strict: false,
     collection: 'polls'
 });
-var table_polls = conn.model('polls', polls);
+var table_polls = mongoose.model('polls', polls);
 
 router.all('/add_user', function(req, res, next) {
     var username = req.query.username;

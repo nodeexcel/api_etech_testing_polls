@@ -69,6 +69,7 @@ app.use(function(err, req, res, next) {
 module.exports = app;
 
 
-app.listen(3031, function() {
+app.listen(3031, async function() {
+    var conn = mongoose.connect('mongodb+srv://atul:java123@cluster0.inlhlku.mongodb.net/etech_testing_polls');
     console.log('app listening on port 3031!');
 });
