@@ -8,10 +8,9 @@ var auth = require('../middleware/auth');
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
 });
-
-
+//mongodb://ashutosh_m:java123@ds251245.mlab.com:51245/etech_testing_polls
 var mongoose = require('mongoose');
-var conn = mongoose.connect('mongodb://ashutosh_m:java123@ds251245.mlab.com:51245/etech_testing_polls');
+var conn = mongoose.connect('mongodb://localhost:27017/etech_testing_polls');
 var users = mongoose.Schema({}, {
     strict: false,
     collection: 'users'
@@ -23,7 +22,6 @@ var polls = mongoose.Schema({}, {
     collection: 'polls'
 });
 var table_polls = conn.model('polls', polls);
-
 
 router.all('/add_user', function(req, res, next) {
     var username = req.query.username;
@@ -122,7 +120,6 @@ router.all('/list_users', function(req, res, next) {
     });
 });
 
-
 router.all('/add_poll', function(req, res, next) {
     var title = req.query.title;
     var options = req.query.options;
@@ -185,8 +182,6 @@ router.all('/list_polls', function(req, res, next) {
     });
 });
 
-
-
 router.all('/list_poll', function(req, res, next) {
     var id = req.query.id;
     table_polls.findOne({
@@ -209,8 +204,6 @@ router.all('/list_poll', function(req, res, next) {
         }
     });
 });
-
-
 
 router.all('/do_vote', function(req, res, next) {
     var id = req.query.id;
@@ -302,7 +295,6 @@ router.all('/do_vote', function(req, res, next) {
     })
 });
 
-
 router.all('/add_new_option', function(req, res, next) {
     var id = req.query.id;
     var option_text = req.query.option_text;
@@ -346,8 +338,6 @@ router.all('/add_new_option', function(req, res, next) {
         }
     });
 });
-
-
 
 router.all('/delete_poll_option', function(req, res, next) {
     var id = req.query.id;
@@ -397,7 +387,6 @@ router.all('/delete_poll_option', function(req, res, next) {
     });
 });
 
-
 router.all('/update_poll_title', function(req, res, next) {
     var id = req.query.id;
     var new_title = req.query.title;
@@ -435,7 +424,6 @@ router.all('/update_poll_title', function(req, res, next) {
         }
     });
 });
-
 
 router.all('/delete_poll', function(req, res, next) {
     var id = req.query.id;
